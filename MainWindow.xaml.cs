@@ -29,6 +29,14 @@ namespace WpfApp7_8
             InitializeComponent();
         }
 
-        
+        private void customControl_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("You have just click your custom control");
+        }
+
+        private void MyButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Вы нажали на МОЮ кнопку");
+        }
     }
 }

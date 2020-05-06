@@ -3,13 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfApp7_8" 
+        xmlns:MyNamespace="clr-namespace:WpfApp7_8"
         xmlns:col="clr-namespace:System.Collections;assembly=mscorlib" 
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="850" Style="{DynamicResource WindowStyle}">
     <Window.Resources>
+ 
         <Style x:Key="ResetButton" TargetType="Button">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -34,6 +35,19 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <ControlTemplate TargetType="Button" x:Key="btTemplate">
+            <Border CornerRadius="25"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    Background="{TemplateBinding Background}"
+                    Height="{TemplateBinding Height}"
+                    Width="{TemplateBinding Width}" >
+                <ContentControl Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Content="{TemplateBinding Content}" />
+            </Border>
+        </ControlTemplate>
     </Window.Resources>
     <Grid ShowGridLines="False" >
         <Grid.ColumnDefinitions>
@@ -83,7 +97,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Button x:Name="Add" Grid.RowSpan="2" Grid.Row="1" Grid.Column="18" Grid.ColumnSpan="3" Style="{StaticResource BG}" Command="{Binding Add}" Background="#EE82EE"  Content="{DynamicResource Add}">
+        <Button x:Name="Add" Grid.RowSpan="2" Grid.Row="1" Grid.Column="18" Template="{StaticResource btTemplate}" Grid.ColumnSpan="3" Style="{StaticResource BG}" Command="{Binding Add}" Background="#EE82EE"  Content="{DynamicResource Add}">
             <Button.Effect>
                 <DropShadowEffect/>
             </Button.Effect>
@@ -178,8 +192,22 @@
                 <ImageBrush ImageSource="russia.png"/>
             </Button.Background>
         </Button>
+        <MyNamespace:MyCustomControl1 x:Name = "customControl" Content = "Click Me" Click = "customControl_Click" Grid.Column="14" Grid.Row="18" Grid.ColumnSpan="3"/>
         <Button x:Name="ChangeTheme" Grid.Row="17" Grid.Column="19" Style="{DynamicResource ChangeColor}"  Command="{Binding ChangeTheme}" Height="23" Margin="0.2,23.8,0.4,0" Grid.RowSpan="2" VerticalAlignment="Top" Focusable="False"/>
         <Label Grid.Row="1"  Grid.Column="14" Grid.ColumnSpan="3" Content="{DynamicResource fullDiscription}" HorizontalContentAlignment="Center" FontSize="11" Background="White"/>
         <TextBlock Grid.RowSpan="11" Grid.Row="2" Grid.Column="14" Grid.ColumnSpan="3" TextWrapping="Wrap" Background="#FFD8ECF9" Text="{Binding Path=FullDescription}" DataContext="{Binding SelectedTask}"/>
+        <Button Grid.Column="10" Grid.Row="18" BorderBrush="{x:Null}" Command="{Binding Undo}" >
+            <Button.Background>
+                <ImageBrush ImageSource="undo.png"/>
+            </Button.Background>
+        </Button>
+        <Button Grid.Column="12" Grid.Row="18" BorderBrush="{x:Null}" Command="{Binding Redo}" >
+            <Button.Background>
+                <ImageBrush ImageSource="redo.png"/>
+            </Button.Background>
+        </Button>
+        <MyNamespace:SelectableLabel Grid.Column="2" Grid.Row="17" IsSelected="True"/>
+        <MyNamespace:SelectableLabel Grid.Column="2" Grid.Row="18" IsSelected="False"/>
+        <MyNamespace:MyButton Grid.Column="3" Grid.Row="17" Grid.RowSpan="2" Content="Click" Tap="MyButton_Click"/>
     </Grid>
 </Window>

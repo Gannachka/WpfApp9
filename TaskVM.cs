@@ -14,6 +14,7 @@ using Vitvor._7_8WPF;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Converters;
+using System.Windows.Automation.Peers;
 
 namespace Vitvor._7_8WPF
 {
@@ -21,10 +22,23 @@ namespace Vitvor._7_8WPF
     {
         private MainWindow _mainWindow;
         private Form form;
-        public ObservableCollection<Task> TODO { get; set; } = new ObservableCollection<Task>();
+        private Stack<ObservableCollection<Task>> undos = new Stack<ObservableCollection<Task>>();
+        private Stack<ObservableCollection<Task>> redos = new Stack<ObservableCollection<Task>>();
+         public ObservableCollection<Task> TODO { get; set; } = new ObservableCollection<Task>();
         public ObservableCollection<Task> TODOSearch { get; set; } = new ObservableCollection<Task>();
         private Task _todo;
-        
+
+        private void SaveTODO()
+        {
+            ObservableCollection<Task> tasks = new ObservableCollection<Task>();
+            foreach (var item in TODO)
+            {
+                tasks.Add(item);
+            }
+            undos.Push(tasks);            
+        }
+
+
         public Task SelectedTask
         {
             get
@@ -71,6 +85,7 @@ namespace Vitvor._7_8WPF
                               task.Duration = (DateTime)form.calendarEnd.SelectedDate;
                               TODO.Add(task);
                               form.Close();
+                              SaveTODO();
 
                           }
                       }));
@@ -88,8 +103,9 @@ namespace Vitvor._7_8WPF
                          if (task != null)
                          {
                              TODO.Remove(task);
+                             SaveTODO();
                          }
-                     }));
+                      }));
             }
         }
         private RelayCommand _search;
@@ -217,9 +233,57 @@ namespace Vitvor._7_8WPF
                                   if(!TODO.Any(u=>u.Category==i.Category && u.Date==i.Date && u.Duration==i.Duration && 
                                   u.FullDescription==i.FullDescription && u.Name==i.Name && u.Periodicity==i.Periodicity && u.Priority==i.Priority && u.State==i.State))
                                       TODO.Add(i);
+
                               }
                           }
+                          SaveTODO();
                       }));
+            }
+        }
+        private RelayCommand _undo;
+        public RelayCommand Undo
+        {
+            get
+            {
+                return _undo ??
+                    (_undo = new RelayCommand(obj =>
+                     {
+                         if (undos.Count > 1)
+                         {
+                             redos.Push(undos.Pop());
+                             TODO.Clear();
+                             foreach (var item in undos.Peek())
+                             {
+                                 TODO.Add(item);
+                             }
+                            
+                         }
+                         else
+                             MessageBox.Show("Warning");
+                     }));
+            }
+        }
+        private RelayCommand _redo;
+        public RelayCommand Redo
+        {
+            get
+            {
+                return _redo ??
+                    (_redo = new RelayCommand(obj =>
+                    {
+                        if (undos.Count != 0)
+                        {
+                            undos.Push(redos.Pop());
+                            TODO.Clear();
+                            foreach (var item in undos.Peek())
+                            {
+                                TODO.Add(item);
+                            }
+                            
+                        }
+                        else
+                            MessageBox.Show("Warning");
+                    }));
             }
         }
         private RelayCommand _changeLanguage;
@@ -300,6 +364,7 @@ namespace Vitvor._7_8WPF
         public TaskVM(MainWindow mainWindow)
         {
             _mainWindow = mainWindow;
+            SaveTODO();
         }
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")

@@ -70,7 +70,10 @@
     <Compile Include="Form.xaml.cs">
       <DependentUpon>Form.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MyButton.cs" />
+    <Compile Include="MyCustomControl1.cs" />
     <Compile Include="RelayCommand.cs" />
+    <Compile Include="SelectableLabel.cs" />
     <Compile Include="task.cs" />
     <Compile Include="TaskVM.cs" />
     <Page Include="Form.xaml">
@@ -104,6 +107,10 @@
     <Page Include="Resourses\DarkTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -139,6 +146,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="education_rating_grade_paper_document_pencil_icon_141968.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="redo.png" />
+    <Resource Include="undo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
